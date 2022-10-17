@@ -17,6 +17,8 @@ This website is a mock Spotify-Clone platform that is non-customer facing. It is
      - Chart.js is included already for your convenience (but any will work!)
 1. Ensure the queries are as performant as possible. We will be judging on performance!
 
+#### Deadline: Midnight PST 10/18/2022
+
 _NOTE:_ [Chart.js](https://www.chartjs.org/) has been provided in the templates already for ease of use but any charting package of your preference is welcome. In addition to that, [django-debug-toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/) has already been installed and is ready for use so you can fine-tune all of your queries.
 
 ### Getting Started
