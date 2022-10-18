@@ -1,20 +1,17 @@
 import csv
+import logging
 import random
-from datetime import datetime, timedelta
+
 import pytz
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management.color import no_style
-from django.utils import timezone
 from django_seed import Seed
-import logging
-
 
 User = get_user_model()
 Profile = apps.get_model("users", "Profile")
-Genre = apps.get_model("music", "Genre")
 RecordLabel = apps.get_model("music", "RecordLabel")
 Playlist = apps.get_model("music", "Playlist")
 Album = apps.get_model("music", "Album")
@@ -22,20 +19,6 @@ Artist = apps.get_model("music", "Artist")
 Song = apps.get_model("music", "Song")
 SongPlayLog = apps.get_model("music", "SongPlayLog")
 City = apps.get_model("content", "City")
-
-DEFAULT_START_DATE = datetime(2022, 1, 1, tzinfo=pytz.UTC)
-DEFAULT_END_DATE = timezone.now()
-
-def random_date(start=DEFAULT_START_DATE, end=DEFAULT_END_DATE):
-    """
-    This function will return a random datetime between two datetime 
-    objects.
-    """
-
-    delta = end - start
-    int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
-    random_second = random.randrange(int_delta)
-    return start + timedelta(seconds=random_second)
 
 
 class Command(BaseCommand):
@@ -96,9 +79,6 @@ class Command(BaseCommand):
         seeder.add_entity(Profile, 100)
 
         # populate artist/song data
-        self.stdout.write("Populating genres...")
-        Genre.objects.bulk_create([Genre(name=g) for g in list(dict(Genre.GENRE_CHOICES).keys())], ignore_conflicts=True)
-
         self.stdout.write("Populating Record labels, artist, album, playlist, and song data...")
         seeder.add_entity(
             RecordLabel,
@@ -124,6 +104,8 @@ class Command(BaseCommand):
             1000,
             {
                 "name": lambda x: seeder.faker.sentence(),
+                "time_length": lambda x: f"00:{random.randint(1,12)}:{random.randint(0,59)}",
+                "genre": lambda x: random.choice(Song.Genre.values),
             },
         )
         seeder.add_entity(
@@ -139,7 +121,7 @@ class Command(BaseCommand):
         seeder.add_entity(
             SongPlayLog,
             random.randint(7777, 9999),
-            {"date_played": lambda x: random_date()}
+            {"date_played": lambda x: seeder.faker.past_datetime(start_date="-1000d", tzinfo=pytz.UTC)},
         )
 
         seeder.execute()

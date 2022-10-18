@@ -1,11 +1,6 @@
 from django.contrib import admin
 
-from .models import Album, Artist, Genre, Playlist, RecordLabel, Song, SongPlayLog
-
-
-@admin.register(Genre)
-class GenreAdmin(admin.ModelAdmin):
-    pass
+from .models import Album, Artist, Playlist, RecordLabel, Song, SongPlayLog
 
 
 @admin.register(RecordLabel)

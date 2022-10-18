@@ -5,7 +5,6 @@ from django.views.generic import TemplateView
 
 User = get_user_model()
 Profile = apps.get_model("users", "Profile")
-Genre = apps.get_model("music", "Genre")
 RecordLabel = apps.get_model("music", "RecordLabel")
 Playlist = apps.get_model("music", "Playlist")
 Album = apps.get_model("music", "Album")
