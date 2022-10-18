@@ -10,13 +10,80 @@
 {% endblock %}
 
 {% block content %}
-    <div class="chart-container">
-        <canvas id="myChart" width="400" height="400"></canvas>
+  <div class="container">
+    <div class="row">
+      <div class="col-auto genre-data">
+        <h3>Genre Information</h3>
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a class="genre-artist-btn nav-link active" style="cursor: pointer">Artists</a></li>
+          <li class="nav-item"><a class="genre-album-btn nav-link" style="cursor: pointer">Albums</a></li>
+          <li class="nav-item"><a class="genre-song-btn nav-link" style="cursor: pointer">Songs</a></li>
+        </ul>
+
+        <div class="chart-container" style="position: relative; width: 400px;">
+          <canvas id="genreChart" width="400" height="400"></canvas>
+        </div>
+      </div>
+
+      <div class="col-auto song-data">
+        <h3>Top 10 Played Artists (This Month)</h3>
+        <ul class="nav nav-tabs">
+          <li class="nav-item"><a class="song-chart-btn nav-link active" style="cursor: pointer">Chart</a></li>
+          <li class="nav-item"><a class="song-table-btn nav-link" style="cursor: pointer">Table</a></li>
+        </ul>
+        <div class="song-chart-container" style="position: relative; width: 400px;">
+          <canvas id="songChart" width="400" height="400"></canvas>
+        </div>
+        <table class="table song-table" style="display: none">
+          <thead>
+            <tr>
+              <th scope="col">Artist</th>
+              <th scope="col">Monthly Plays</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for song in song_data %}
+            <tr>
+              <th scope="row">{{ song.artist_name }}</th>
+              <td>{{ song.plays }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
+
+    <div class="row">
+      <div class="col artist-data">
+        <h3>Detailed Artist Information</h3>
+        <table class="table">
+          <thead>
+            <th scope="col">Artist</th>
+            <th scope="col"># of Songs</th>
+            <th scope="col">Avg. Length</th>
+          </thead>
+          <tbody>
+            {% for artist in artist_data %}
+            <tr>
+              <th scope="row">{{ artist.name }}</th>
+              <td>{{ artist.song_count }}</td>
+              <td>{{ artist.average_length }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block scripts %}
     {{ block.super }}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static "content/js/dashboard.js" %}"></script>
+    <script>
+      window.genreData = JSON.parse(`{{ genre_data|safe }}`);
+      window.songData = JSON.parse(`{{ song_data_json|safe }}`)
+    </script>
 {% endblock %}

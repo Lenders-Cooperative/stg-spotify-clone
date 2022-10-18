@@ -28,7 +28,7 @@ DEFAULT_END_DATE = timezone.now()
 
 def random_date(start=DEFAULT_START_DATE, end=DEFAULT_END_DATE):
     """
-    This function will return a random datetime between two datetime 
+    This function will return a random datetime between two datetime
     objects.
     """
 
@@ -98,6 +98,7 @@ class Command(BaseCommand):
         # populate artist/song data
         self.stdout.write("Populating genres...")
         Genre.objects.bulk_create([Genre(name=g) for g in list(dict(Genre.GENRE_CHOICES).keys())], ignore_conflicts=True)
+        genres = list(Genre.objects.all())
 
         self.stdout.write("Populating Record labels, artist, album, playlist, and song data...")
         seeder.add_entity(
@@ -110,7 +111,10 @@ class Command(BaseCommand):
         seeder.add_entity(
             Artist,
             200,
-            {"name": lambda x: seeder.faker.name()},
+            {
+                "name": lambda x: seeder.faker.name(),
+                "genre": lambda x: random.choice(genres),
+            },
         )
         seeder.add_entity(
             Album,
