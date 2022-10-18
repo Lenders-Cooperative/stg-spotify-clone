@@ -48,6 +48,7 @@ class Artist(models.Model):
     birth_date = models.DateTimeField()
     hometown = models.CharField(max_length=150, blank=True, null=True)
     record_label = models.ForeignKey(RecordLabel, on_delete=models.CASCADE, related_name="recording_artists")
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name="recording_artists")
 
     def __str__(self):
         return self.name
