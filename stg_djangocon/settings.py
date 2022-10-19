@@ -19,7 +19,7 @@ DEBUG = config("DEBUG", cast=bool)
 
 ALLOWED_HOSTS = ["*"]
 
-INTERNAL_IPS = ["127.0.0.1", "0.0.0.0", "172.22.0.1", "172.18.0.1"]
+INTERNAL_IPS = ["127.0.0.1", "0.0.0.0", "172.22.0.1"]
 
 # Application definition
 
