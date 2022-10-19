@@ -47,13 +47,11 @@ class DashboardView(TemplateView):
 
         # Song and PlayLog count per Genre
         song_count = Song.objects.values("genre").annotate(count=Count("genre"))
+        song_count = list(song_count.values_list("count", flat=True))
         play_count = SongPlayLog.objects.values("song__genre").annotate(count=Count("song__genre"))
+        play_count = list(play_count.values_list("count", flat=True))
         artists = SongPlayLog.objects.values("song__artist", "song__artist__name").annotate(count=Count("song__artist"))
-        context["genres_summary"] = {
-            "labels": Song.Genre.labels,
-            "songs": list(song_count.values_list("count", flat=True)),
-            "plays": list(play_count.values_list("count", flat=True)),
-        }
+        context["genres_summary"] = {"labels": Song.Genre.labels, "songs": song_count, "plays": play_count}
 
         # Top artists by month
         months = []
@@ -75,6 +73,6 @@ class DashboardView(TemplateView):
             "duration": str(avg_duration).split(".")[0],
             "album": Album.objects.annotate(count=Count("songs")).aggregate(Avg("count"))["count__avg"],
             "artist": Artist.objects.annotate(count=Count("songs")).aggregate(Avg("count"))["count__avg"],
-            "genre": song_count.aggregate(Avg("count"))["count__avg"],
+            "genre": sum(song_count) / len(song_count),
         }
         return context
