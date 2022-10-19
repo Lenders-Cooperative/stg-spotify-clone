@@ -1,6 +1,8 @@
 import csv
+import logging
 import random
 from datetime import datetime, timedelta
+
 import pytz
 from django.apps import apps
 from django.conf import settings
@@ -9,8 +11,6 @@ from django.core.management.base import BaseCommand, CommandError
 from django.core.management.color import no_style
 from django.utils import timezone
 from django_seed import Seed
-import logging
-
 
 User = get_user_model()
 Profile = apps.get_model("users", "Profile")
@@ -25,6 +25,7 @@ City = apps.get_model("content", "City")
 
 DEFAULT_START_DATE = datetime(2022, 1, 1, tzinfo=pytz.UTC)
 DEFAULT_END_DATE = timezone.now()
+
 
 def random_date(start=DEFAULT_START_DATE, end=DEFAULT_END_DATE):
     """
@@ -140,11 +141,7 @@ class Command(BaseCommand):
 
         # populate song play logs
         self.stdout.write("Populating playtime song logs. This could take a few minutes...")
-        seeder.add_entity(
-            SongPlayLog,
-            random.randint(7777, 9999),
-            {"date_played": lambda x: random_date()}
-        )
+        seeder.add_entity(SongPlayLog, random.randint(7777, 9999), {"date_played": lambda x: random_date()})
 
         seeder.execute()
 

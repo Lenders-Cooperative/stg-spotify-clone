@@ -1,5 +1,7 @@
 from django.views.generic import TemplateView
+
 from .models import Song
+
 
 class CatalogView(TemplateView):
     template_name = "content/catalog.html"
