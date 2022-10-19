@@ -28,7 +28,7 @@ DEFAULT_END_DATE = timezone.now()
 
 def random_date(start=DEFAULT_START_DATE, end=DEFAULT_END_DATE):
     """
-    This function will return a random datetime between two datetime 
+    This function will return a random datetime between two datetime
     objects.
     """
 
@@ -112,6 +112,7 @@ class Command(BaseCommand):
             200,
             {"name": lambda x: seeder.faker.name()},
         )
+        # artists = Artist.objects.all()
         seeder.add_entity(
             Album,
             300,
@@ -124,6 +125,7 @@ class Command(BaseCommand):
             1000,
             {
                 "name": lambda x: seeder.faker.sentence(),
+                # "artists": lambda x: random.choice(artists),
             },
         )
         seeder.add_entity(
