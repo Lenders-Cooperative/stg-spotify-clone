@@ -121,7 +121,7 @@ class Command(BaseCommand):
         seeder.add_entity(
             SongPlayLog,
             random.randint(7777, 9999),
-            {"date_played": lambda x: seeder.faker.past_datetime(start_date="-1000d", tzinfo=pytz.UTC)},
+            {"date_played": lambda x: seeder.faker.past_datetime(start_date="-180d", tzinfo=pytz.UTC)},
         )
 
         seeder.execute()
