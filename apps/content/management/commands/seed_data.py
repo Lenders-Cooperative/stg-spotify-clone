@@ -98,6 +98,7 @@ class Command(BaseCommand):
         # populate artist/song data
         self.stdout.write("Populating genres...")
         Genre.objects.bulk_create([Genre(name=g) for g in list(dict(Genre.GENRE_CHOICES).keys())], ignore_conflicts=True)
+        genres = Genre.objects.all()
 
         self.stdout.write("Populating Record labels, artist, album, playlist, and song data...")
         seeder.add_entity(
@@ -125,6 +126,7 @@ class Command(BaseCommand):
             1000,
             {
                 "name": lambda x: seeder.faker.sentence(),
+                "genre": lambda x: random.choice(genres)
                 # "artists": lambda x: random.choice(artists),
             },
         )

@@ -70,7 +70,7 @@ class Song(models.Model):
     name = models.CharField(max_length=150)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="songs")
     album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name="songs", blank=True, null=True)
-    # genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name="songs", blank=True, null=True)
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name="songs", blank=True, null=True)
     time_length = models.TimeField()
 
     def __str__(self):
