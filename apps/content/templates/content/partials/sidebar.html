@@ -17,7 +17,13 @@
             <a href="{% url 'home' %}"><span class="fa fa-home mr-3"></span> Home</a>
         </li>
         <li {% if active_tab == "dashboard" %}class="active"{% endif %}>
-            <a href="{% url 'dashboard' %}"><span class="fa fa-star mr-3"></span> Dashboard</a>
+            <a href="{% url 'dashboard' %}"><span class="fa fa-star mr-3"></span> Genre Dashboard</a>
+        </li>
+        <li {% if active_tab == "artists" %}class="active"{% endif %}>
+            <a href="{% url 'artists' %}"><span class="fa fa-user mr-3"></span> Artists Dashboard</a>
+        </li>
+        <li {% if active_tab == "top_artists" %}class="active"{% endif %}>
+            <a href="{% url 'top_artists' %}"><span class="fa fa-list mr-3"></span> Top Artists</a>
         </li>
         <li {% if active_tab == "catalog" %}class="active"{% endif %}>
             <a href="{% url 'catalog' %}"><span class="fa fa-music mr-3"></span> Music Catalog</a>

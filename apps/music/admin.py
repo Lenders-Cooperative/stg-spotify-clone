@@ -27,6 +27,7 @@ class AlbumAdmin(admin.ModelAdmin):
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
     list_select_related = ("artist", "album")
+    list_display = ("name", "artist", "time_length")
 
 
 @admin.register(Playlist)
@@ -35,7 +36,7 @@ class PlaylistAdmin(admin.ModelAdmin):
     list_select_related = ("user",)
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related("songs")
+        return super().get_queryset(request)
 
 
 @admin.register(SongPlayLog)

@@ -119,20 +119,28 @@ class Command(BaseCommand):
                 "name": lambda x: seeder.faker.sentence(),
             },
         )
+
+        genres = list(Genre.objects.all())
         seeder.add_entity(
             Song,
             1000,
             {
                 "name": lambda x: seeder.faker.sentence(),
+                "genre": lambda x: random.choice(genres),
+                "time_length": lambda x: timedelta(seconds=random.randint(120,210))
             },
         )
+
+        songs = list(Song.objects.all())
         seeder.add_entity(
             Playlist,
             250,
             {
-                "name": lambda x: f"{seeder.faker.name()}'s Playlist",
+                "name": lambda x: f"{seeder.faker.name()}'s Playlist"
             },
         )
+        playlists = Playlist.objects.all()
+        _ = [playlist.songs.set(random.choices(songs, k=random.randint(5, 50))) for playlist in playlists]
 
         # populate song play logs
         self.stdout.write("Populating playtime song logs. This could take a few minutes...")
