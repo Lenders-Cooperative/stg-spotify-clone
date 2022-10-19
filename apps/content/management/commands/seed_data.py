@@ -70,6 +70,9 @@ class Command(BaseCommand):
 
     def seed_data(self):
         logging.getLogger().setLevel(logging.CRITICAL)  # squelch django-seed bugginess
+        if City.objects.all().exists():
+            self.stdout.write("Skipping data seeding.")
+            return
 
         # populate city, state data
         self.stdout.write("Populating city location data...")
@@ -97,8 +100,14 @@ class Command(BaseCommand):
 
         # populate artist/song data
         self.stdout.write("Populating genres...")
-        Genre.objects.bulk_create([Genre(name=g) for g in list(dict(Genre.GENRE_CHOICES).keys())], ignore_conflicts=True)
-
+        genres = list(dict(Genre.GENRE_CHOICES).keys())
+        seeder.add_entity(
+            Genre,
+            len(genres),
+            {
+                "name": lambda x: genres.pop()
+            }
+        )
         self.stdout.write("Populating Record labels, artist, album, playlist, and song data...")
         seeder.add_entity(
             RecordLabel,
