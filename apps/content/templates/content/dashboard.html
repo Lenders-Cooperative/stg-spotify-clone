@@ -1,5 +1,6 @@
 {% extends "content/base.html" %}
 {% load static %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 
 {% block title %}
     Dashboard
@@ -10,13 +11,235 @@
 {% endblock %}
 
 {% block content %}
-    <div class="chart-container">
-        <canvas id="myChart" width="400" height="400"></canvas>
+
+    <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12 col-lg-12">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">General Information</h3>  
+                </div>
+                <div class="card-body">
+                  <div class="chart">
+                    <canvas id="mainChart"></canvas>
+                  </div>
+                    </div>
+                  </div>
+               </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          <form method="GET">
+            <div>
+                <div class="w-full px-2 md:w-4/12 mt-5 whiteBG py-1 mx-auto rounded-lg">
+    
+                    <select name="date_month" id="months_id" class="text-center selectpicker text-black" data-show-subtext="true" data-live-search="true">
+                        <option value="" selected='true' disabled='true' class='text-center'>select a month</option>
+                        {% for m in months %}
+                        <option  value="{{ m }}" class='text-center'>{{m | date:'%Y-%m'}}</option>
+                        {% endfor %}            
+                    </select>                                       
+                    <button><i class="fas fa-search text-lg grayCOLOR ml-4">Search</i></button>
+                </div>
+            </div>
+          </form>
+
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Top 10 artiests by months</h3>
+            </div>
+            <div class="card-body">
+              <div class="chart">
+                <canvas id="monthlyChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="col-md-6">
+          <div class="card card-info">
+            <div class="card-header">
+              <h3 class="card-title">Average of songs per Artiest</h3>
+            </div>
+            <div class="card-body">
+              <div class="chart">
+                <canvas id="avgChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
+
 {% endblock %}
 
 {% block scripts %}
     {{ block.super }}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static "content/js/dashboard.js" %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+    <script>
+        var ctx = document.getElementById('mainChart');
+        const borderColor = [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ];
+        
+        const backgroundColor = [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ];
+        const borderWidth = 1;
+        const fill = false;
+        var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: [{% for i in songs_artiest_info %} '{{ i.name }}',{% endfor %}],
+            datasets: [{
+                label: 'number of albums',
+                data: [{% for i in albums_artiest_info %} '{{i.albums_no}}',{% endfor %}],
+                backgroundColor: 'rgb(127,255,0)',
+                borderColor,
+                borderWidth,
+                fill
+              },
+              {
+                label: 'number of songs',
+                data: [{% for i in songs_artiest_info %} '{{i.songs_no}}',{% endfor %}],
+                backgroundColor: 'rgb(255,255,0)',
+                borderColor,
+                borderWidth,
+                fill
+              },
+              {
+                label: 'songs played',
+                data: [{% for i in songs_artiest_info %} '{{i.song_played_no}}',{% endfor %}],
+                backgroundColor: 'rgb(218,165,32)',
+                borderColor,
+                borderWidth,
+                fill
+              },
+            ]
+          },
+          options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+        });
+        </script>    
+
+        <script>
+            var ctx = document.getElementById('monthlyChart');
+            const borderColor = [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ];
+            
+            const backgroundColor = [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ];
+            const borderWidth = 1;
+            const fill = false;
+            var myChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: [{% for i in top_artiests %} '{{ i.name }}',{% endfor %}],
+                datasets: [{
+                    label: 'Monthly listners',
+                    data: [{% for i in top_artiests %} '{{i.played_songs_no}}',{% endfor %}],
+                    backgroundColor: 'rgb(127,255,0)',
+                    borderColor,
+                    borderWidth,
+                    fill
+                  },
+                ]
+              },
+              options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+            });
+            </script> 
+
+            <script>
+              var ctx = document.getElementById('avgChart');
+              const avgBorderColor = [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+              ];
+              
+              const avgBackgroundColor = [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+              ];
+              const avgBorderWidth = 1;
+              const avgFill = false;
+              var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: [{% for i in avg_of_songs %} '{{ i.name }}',{% endfor %}],
+                  datasets: [{
+                      label: 'Average of songs per artiests',
+                      data: [{% for i in avg_of_songs %} '{{ i.avg_songs }}',{% endfor %}],                      
+                      backgroundColor:'rgb(127,255,0)',
+                      borderWidth:avgBorderWidth,
+                      fill:avgFill
+                    },
+                  ]
+                },
+                options: {
+                  scales: {
+                      y: {
+                          beginAtZero: true
+                      }
+                  }
+              }
+              });
+              </script>                
+
+
+            <script>
+              $('#months_id').select2();
+          </script>
 {% endblock %}
+
