@@ -5,37 +5,6 @@ from django.utils import timezone
 User = get_user_model()
 
 
-class Genre(models.Model):
-    POP = "pop"
-    COUNTRY = "country"
-    RNB = "rnb"
-    HIP_HOP = "hip_hop"
-    GOSPEL = "gospel"
-    KPOP = "kpop"
-    ROCK = "rock"
-    TECHNO = "techno"
-    FLAMENCO = "flamenco"
-    CLASSICAL = "classical"
-
-    GENRE_CHOICES = [
-        (POP, "Pop"),
-        (COUNTRY, "Country"),
-        (RNB, "Rhythm & Blues"),
-        (HIP_HOP, "Hip Hop"),
-        (GOSPEL, "Gospel"),
-        (KPOP, "K-Pop"),
-        (ROCK, "Rock 'N Roll"),
-        (TECHNO, "Techno/Dance"),
-        (FLAMENCO, "Flamenco"),
-        (CLASSICAL, "Classical"),
-    ]
-
-    name = models.CharField(max_length=150, choices=GENRE_CHOICES)
-
-    def __str__(self):
-        return self.name
-
-
 class RecordLabel(models.Model):
     name = models.CharField(max_length=150)
 
@@ -67,9 +36,22 @@ class Album(models.Model):
 
 
 class Song(models.Model):
+    class Genre(models.TextChoices):
+        POP = "pop", "Pop"
+        COUNTRY = "country", "Country"
+        RNB = "rnb", "Rhythm & Blues"
+        HIP_HOP = "hip_hop", "Hip Hop"
+        GOSPEL = "gospel", "Gospel"
+        KPOP = "kpop", "K-Pop"
+        ROCK = "rock", "Rock 'N Roll"
+        TECHNO = "techno", "Techno/Dance"
+        FLAMENCO = "flamenco", "Flamenco"
+        CLASSICAL = "classical", "Classical"
+
     name = models.CharField(max_length=150)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="songs")
     album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name="songs", blank=True, null=True)
+    genre = models.CharField(max_length=100, choices=Genre.choices, default=Genre.POP)
     time_length = models.TimeField()
 
     def __str__(self):
