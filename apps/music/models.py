@@ -70,7 +70,8 @@ class Song(models.Model):
     name = models.CharField(max_length=150)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="songs")
     album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name="songs", blank=True, null=True)
-    time_length = models.TimeField()
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name="songs", blank=True, null=True)
+    time_length = models.DurationField()
 
     def __str__(self):
         return f"{self.artist} - {self.name}"
@@ -79,6 +80,7 @@ class Song(models.Model):
 class Playlist(models.Model):
     name = models.CharField(max_length=150)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="playlists")
+    songs = models.ManyToManyField(Song, related_name="playlists")
 
     def __str__(self):
         return str(self.pk)

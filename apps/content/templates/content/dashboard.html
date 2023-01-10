@@ -2,21 +2,44 @@
 {% load static %}
 
 {% block title %}
-    Dashboard
+    Genre Dashboard
 {% endblock %}
 
 {% block header %}
-    Dashboard
+    Genre Dashboard
 {% endblock %}
 
 {% block content %}
     <div class="chart-container">
-        <canvas id="myChart" width="400" height="400"></canvas>
+        <canvas id="songsChart" width="400" height="400"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="artistsChart" width="400" height="400"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="albumsChart" width="400" height="400"></canvas>
     </div>
 {% endblock %}
 
 {% block scripts %}
     {{ block.super }}
+    <script>
+        var genres_str='{{ genres|safe }}';
+        var genres = JSON.parse(genres_str);
+        let labels = [];
+        let songsPerGenre = [];
+        let artistsPerGenre = [];
+        let albumsPerGenre = [];
+        genres.forEach(function(label, idx) {
+            labels.push(label["name"]);
+            songsPerGenre.push(label["songs_count"]);
+            artistsPerGenre.push(label["artists"]);
+            albumsPerGenre.push(label["albums"]);
+        });
+        const randomColorGenerator = function () {
+            return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+        };
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static "content/js/dashboard.js" %}"></script>
 {% endblock %}
