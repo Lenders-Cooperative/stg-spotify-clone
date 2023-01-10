@@ -10,13 +10,78 @@
 {% endblock %}
 
 {% block content %}
-    <div class="chart-container">
-        <canvas id="myChart" width="400" height="400"></canvas>
+    <div class="row">
+        <div class="col-xs-12 col-md-5">
+            <h3>Genres breakdown</h3>
+            <div class="container-fluid">
+                <canvas id="genresChart" width="100%" height="100%" style="max-height: 400px"></canvas>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-5">
+            <h3>Songs breakdown</h3>
+            <div style="overflow-y: auto; max-height: 400px">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Artist</th>
+                        <th scope="col"># of songs</th>
+                        <th scope="col">Average duration</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for entry in songs_breakdown.raw %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ entry.name }}</td>
+                            <td>{{ entry.songs_count }}</td>
+                            <td>{{ entry.avg_length }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <h3>Top 10 artists</h3>
+    <div class="row">
+        <div class="col-xs-12 col-md-5">
+            <div class="container-fluid">
+                <canvas id="top10chart" width="100%" height="100%" style="max-height: 400px"></canvas>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-5">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Artist</th>
+                    <th scope="col">Plays</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for entry in top10.raw %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ entry.name }}</td>
+                        <td>{{ entry.plays }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
 
 {% block scripts %}
     {{ block.super }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const top10 = {{ top10.json | safe }};
+        const genres_breakdown = {{ genres_breakdown.json | safe }};
+        const songs_breakdown = {{ songs_breakdown.json | safe }};
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+            integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static "content/js/dashboard.js" %}"></script>
 {% endblock %}
